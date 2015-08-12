@@ -15,7 +15,7 @@ Installation
 Install-Module SitecoreShipFunctions
 ```
 
-*Note:* I'm actively working on getting SitecoreShipFunctions added to PsGet's directory. As a fallback, you can download and install the module manually.
+Alternatively, you can download and install the module manually.
 
 1. Download the latest release.
 2. Open properties for zip file and click "Unblock" button if you have one.
