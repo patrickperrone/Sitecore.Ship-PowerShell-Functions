@@ -22,11 +22,7 @@ Install-Module SitecoreShipFunctions
 3. Unzip 
 4. Open a PowerShell console
 5. Run ```.\Install.ps1``` You may need to allow remote scripts by running 
-```Set-ExecutionPolicy -RemoteSigned```. You may also have to right-click ```Install.ps1```
-and Unblock it from the properties window. 
-**Alternative:**
-Add line ```Import-Module $modules\SitecoreShipFunctions\SitecoreShipFunctions.psd1``` to your ```$PROFILE```,
-where ```$modules\SitecoreShipFunctions``` is a path to the folder with the contents extracted from downloaded zip.
+```Set-ExecutionPolicy -RemoteSigned```. You may also have to right-click ```Install.ps1``` and Unblock it from the properties window. **Alternative:** Add line ```Import-Module $modules\SitecoreShipFunctions\SitecoreShipFunctions.psd1``` to your ```$PROFILE```, where ```$modules\SitecoreShipFunctions``` is a path to the folder with the contents extracted from downloaded zip.
 
 
 
