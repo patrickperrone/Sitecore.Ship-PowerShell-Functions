@@ -3,7 +3,7 @@
     <metadata>
         <title>SitecoreShipFunctions</title>
         <id>sitecoreshipfunctions</id>
-        <version>1.0.1</version>
+        <version>1.1.0</version>
         <authors>Patrick Perrone</authors>
         <owners>Patrick Perrone</owners>
         <licenseUrl>https://github.com/patrickperrone/Sitecore.Ship-PowerShell-Functions/blob/master/README.md</licenseUrl>
