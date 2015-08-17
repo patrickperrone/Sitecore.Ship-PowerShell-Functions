@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <title>SitecoreShipFunctions</title>
+        <id>sitecoreshipfunctions</id>
+        <version>1.1.0</version>
+        <authors>Patrick Perrone</authors>
+        <owners>Patrick Perrone</owners>
+        <licenseUrl>https://github.com/patrickperrone/Sitecore.Ship-PowerShell-Functions/blob/master/README.md</licenseUrl>
+        <projectUrl>https://github.com/patrickperrone/Sitecore.Ship-PowerShell-Functions</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>
+			Package installation can be as simple as "ssinstall www.mysite.com mypackage.update"
+			
+			The functions in this module support all operations of Sitecore.Ship, and are self-documented so that Get-Help commands provide descriptions, syntax, and examples. Use these functions to build a repeatable deployment script for any environment!
+		</description>
+        <summary>
+			Make web requests to a Sitecore.Ship-enabled server directly from PowerShell.
+		</summary>
+        <tags>Sitecore Ship Sitecore.Ship Functions powershell</tags>
+    </metadata>
+    <files>
+        <file src="tools\chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
+    </files>
+</package>
