@@ -15,7 +15,12 @@ Installation
 Install-Module SitecoreShipFunctions
 ```
 
-Alternatively, you can download and install the module manually.
+There is a Chocolatey package coming soon. To install:
+```
+choco install sitecoreshipfunctions
+```
+
+Finally, you can download and install the module manually.
 
 1. Download the latest release.
 2. Open properties for zip file and click "Unblock" button if you have one.
