@@ -640,7 +640,7 @@ function Get-SitecoreShipLastCompletedPublish
             $scheme = "https"
         }
 
-        $servicePath = "/services/publish"
+        $servicePath = "/services/publish/lastcompleted"
         if (![string]::IsNullOrWhiteSpace($PublishSource))
         {
             $servicePath += "/" + $PublishSource.ToLower()
@@ -655,10 +655,7 @@ function Get-SitecoreShipLastCompletedPublish
         }
         $serviceUrl = "{0}://{1}{2}" -f $scheme,$HostName,$servicePath
 
-        write-host $serviceUrl
-
-        $time = Invoke-RestMethod "http://sitecoreshippoc/services/publish/lastcompleted" -Method GET -TimeoutSec $Timeout
-
+        $time = Invoke-RestMethod $serviceUrl -Method GET -TimeoutSec $Timeout
         if (!$ResultAsUniversalTime)
         {
             $time = $time.ToLocalTime()
