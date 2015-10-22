@@ -81,6 +81,9 @@ function Invoke-SitecoreShipAboutRequest
 
     .PARAMETER UseHttps
     The web service request should use HTTPS to connect to the Sitecore server.
+
+    .PARAMETER Timeout
+    Duration in seconds before the web service request times out. The default value is 600 seconds.
     #>
     [CmdletBinding()]
     param
@@ -88,7 +91,9 @@ function Invoke-SitecoreShipAboutRequest
         [parameter(Position=0, Mandatory=$true)]
         [string]$HostName,
         [parameter(Mandatory=$false, HelpMessage="Make web service request using HTTPS scheme.")]
-        [switch]$UseHttps
+        [switch]$UseHttps,
+        [parameter(Mandatory=$false, HelpMessage="Duration to wait in seconds before timing out the request to Sitecore.Ship.")]
+        [int]$Timeout = 600
     )
     process
     {
@@ -100,7 +105,7 @@ function Invoke-SitecoreShipAboutRequest
 
         $servicePath = "/services/about"
         $url = "{0}://{1}{2}" -f $scheme,$HostName,$servicePath
-        $webResponse = Invoke-WebRequest $url
+        $webResponse = Invoke-WebRequest $url -TimeoutSec $Timeout
         return $webResponse
     }
 }
@@ -129,6 +134,9 @@ function Get-SitecoreShipVersion
 
     .PARAMETER UseHttps
     The web service request should use HTTPS to connect to the Sitecore server.
+
+    .PARAMETER Timeout
+    Duration in seconds before the web service request times out. The default value is 600 seconds.
     #>
     [CmdletBinding()]
     param
@@ -136,17 +144,19 @@ function Get-SitecoreShipVersion
         [parameter(Position=0, Mandatory=$true)]
         [string]$HostName,
         [parameter(Mandatory=$false, HelpMessage="Make web service request using HTTPS scheme.")]
-        [switch]$UseHttps
+        [switch]$UseHttps,
+        [parameter(Mandatory=$false, HelpMessage="Duration to wait in seconds before timing out the request to Sitecore.Ship.")]
+        [int]$Timeout = 600
     )
     process
     {
         if ($UseHttps)
         {
-            $webResponse = Invoke-SitecoreShipAboutRequest $HostName -UseHttps
+            $webResponse = Invoke-SitecoreShipAboutRequest $HostName -UseHttps -Timeout $Timeout
         }
         else
         {
-            $webResponse = Invoke-SitecoreShipAboutRequest $HostName
+            $webResponse = Invoke-SitecoreShipAboutRequest $HostName -Timeout $Timeout
         }
         $bodyText = ($webResponse.ParsedHtml.getElementsByTagName("body") | select innerText).innerText
         [string]$versionText = $bodyText.Split("`r`n") | Select-String "Current release"
@@ -175,6 +185,9 @@ function Test-SitecoreShipIsInstalled
 
     .PARAMETER UseHttps
     The web service request should use HTTPS to connect to the Sitecore server.
+
+    .PARAMETER Timeout
+    Duration in seconds before the web service request times out. The default value is 600 seconds.
     #>
     [CmdletBinding()]
     param
@@ -182,7 +195,9 @@ function Test-SitecoreShipIsInstalled
         [parameter(Position=0, Mandatory=$true)]
         [string]$HostName,
         [parameter(Mandatory=$false, HelpMessage="Make web service request using HTTPS scheme.")]
-        [switch]$UseHttps
+        [switch]$UseHttps,
+        [parameter(Mandatory=$false, HelpMessage="Duration to wait in seconds before timing out the request to Sitecore.Ship.")]
+        [int]$Timeout = 600
     )
     process
     {
@@ -190,11 +205,11 @@ function Test-SitecoreShipIsInstalled
         {
             if ($UseHttps)
             {
-                $webResponse = Invoke-SitecoreShipAboutRequest $HostName -UseHttps
+                $webResponse = Invoke-SitecoreShipAboutRequest $HostName -UseHttps -Timeout $Timeout
             }
             else
             {
-                $webResponse = Invoke-SitecoreShipAboutRequest $HostName
+                $webResponse = Invoke-SitecoreShipAboutRequest $HostName -Timeout $Timeout
             }
 
             if ($webResponse.StatusCode -eq 200)
@@ -249,6 +264,9 @@ function Invoke-SitecoreShipPackageInstallRequest
     .PARAMETER UseHttps
     The web service request should use HTTPS to connect to the Sitecore server.
 
+    .PARAMETER Timeout
+    Duration in seconds before the web service request times out. The default value is 600 seconds.
+
     .PARAMETER DisableIndexing
     Suspend search index updates during installation.
     #>
@@ -263,11 +281,14 @@ function Invoke-SitecoreShipPackageInstallRequest
         [switch]$FileUpload,
         [parameter(Mandatory=$false, HelpMessage="Make web service request using HTTPS scheme.")]
         [switch]$UseHttps,
+        [parameter(Mandatory=$false, HelpMessage="Duration to wait in seconds before timing out the request to Sitecore.Ship.")]
+        [int]$Timeout = 600,
         [parameter(Mandatory=$false, HelpMessage="Suspends search index updates during install; improves installation speed.")]
         [switch]$DisableIndexing
     )
     process
     {
+        $Timeout = $Timeout * 1000
         if ($FileUpload -and !(Test-Path $FilePath))
         {
             throw [System.IO.FileNotFoundException] "$FilePath not found."
@@ -320,7 +341,8 @@ function Invoke-SitecoreShipPackageInstallRequest
 
         # Form web request
         $request = [System.Net.HttpWebRequest]::CreateHttp($serviceUrl)
-        $request.Method = 'POST';
+        $request.Method = 'POST'
+        $request.Timeout = $Timeout
         $request.Accept = "application/json, text/javascript, */*"
         $request.KeepAlive = $true
         $request.ContentType = "multipart/form-data; boundary={0}" -f $boundaryId
@@ -384,6 +406,9 @@ function Invoke-SitecoreShipPublishRequest
     .PARAMETER UseHttps
     The web service request should use HTTPS to connect to the Sitecore server.
 
+    .PARAMETER Timeout
+    Duration in seconds before the web service request times out. The default value is 600 seconds.
+
     .PARAMETER PublishMode
     Accepted values are full, smart, or incremental
 
@@ -409,20 +434,23 @@ function Invoke-SitecoreShipPublishRequest
         [parameter(Mandatory=$false, HelpMessage="Make web service request using HTTPS scheme.")]
         [switch]$UseHttps,
 
+        [parameter(Mandatory=$false, HelpMessage="Duration to wait in seconds before timing out the request to Sitecore.Ship.")]
+        [int]$Timeout = 600,
+
         [parameter(ParameterSetName="mode", Position=1, Mandatory=$true, HelpMessage="Valid values are full, smart, or incremental")]
         [ValidateSet("full", "smart", "incremental")]
         [string]$PublishMode,
 
-        [parameter(ParameterSetName="mode", Mandatory=$false, HelpMessage="TODO")]
+        [parameter(ParameterSetName="mode", Mandatory=$false, HelpMessage="The source database.")]
         [string]$PublishSource,
 
-        [parameter(ParameterSetName="mode", Mandatory=$false, HelpMessage="TODO")]
+        [parameter(ParameterSetName="mode", Mandatory=$false, HelpMessage="The target database(s).")]
         [string[]]$PublishTargets,
 
-        [parameter(ParameterSetName="mode", Mandatory=$false, HelpMessage="TODO")]
+        [parameter(ParameterSetName="mode", Mandatory=$false, HelpMessage="The languages to publish (e.g. en, da)")]
         [string[]]$Languages,
 
-        [parameter(ParameterSetName="items", Mandatory=$true, HelpMessage="TODO")]
+        [parameter(ParameterSetName="items", Mandatory=$true, HelpMessage="JSON object that represents items to publish.")]
         [string]$PublishItems,
 
         [parameter(Mandatory=$false, HelpMessage="TODO.")]
@@ -430,6 +458,7 @@ function Invoke-SitecoreShipPublishRequest
     )
     process
     {
+        $Timeout = $Timeout * 1000
         $scheme = "http"
         if ($UseHttps)
         {
@@ -474,6 +503,7 @@ function Invoke-SitecoreShipPublishRequest
             # Form web request
             $request = [System.Net.HttpWebRequest]::CreateHttp($serviceUrl)
             $request.Method = 'POST';
+            $request.Timeout = $Timeout
             $request.Accept = "application/json, text/javascript, */*"
             $request.KeepAlive = $true
             $request.ContentType = "multipart/form-data; boundary={0}" -f $boundaryId
@@ -488,7 +518,8 @@ function Invoke-SitecoreShipPublishRequest
 
             # Form web request
             $request = [System.Net.HttpWebRequest]::CreateHttp($serviceUrl)
-            $request.Method = 'POST';
+            $request.Method = 'POST'
+            $request.Timeout = $Timeout
             $request.Accept = "application/json, text/javascript, */*"
             $request.KeepAlive = $true
             $request.ContentType = "application/json"
@@ -547,6 +578,9 @@ function Get-SitecoreShipLastCompletedPublish
     .PARAMETER UseHttps
     The web service request should use HTTPS to connect to the Sitecore server.
 
+    .PARAMETER Timeout
+    Duration in seconds before the web service request times out. The default value is 600 seconds.
+
     .PARAMETER PublishSource
     This is the name of the source database.
 
@@ -573,6 +607,12 @@ function Get-SitecoreShipLastCompletedPublish
         [parameter(ParameterSetName="target", Mandatory=$false, HelpMessage="Make web service request using HTTPS scheme.")]
         [parameter(ParameterSetName="language", Mandatory=$false, HelpMessage="Make web service request using HTTPS scheme.")]
         [switch]$UseHttps,
+
+        [parameter(ParameterSetName="base", Mandatory=$false, HelpMessage="Duration to wait in seconds before timing out the request to Sitecore.Ship.")]
+        [parameter(ParameterSetName="source", Mandatory=$false, HelpMessage="Duration to wait in seconds before timing out the request to Sitecore.Ship.")]
+        [parameter(ParameterSetName="target", Mandatory=$false, HelpMessage="Duration to wait in seconds before timing out the request to Sitecore.Ship.")]
+        [parameter(ParameterSetName="language", Mandatory=$false, HelpMessage="Duration to wait in seconds before timing out the request to Sitecore.Ship.")]
+        [int]$Timeout = 600,
 
         [parameter(ParameterSetName="source", Mandatory=$true, HelpMessage="TODO")]
         [parameter(ParameterSetName="target", Mandatory=$true, HelpMessage="TODO")]
@@ -617,7 +657,7 @@ function Get-SitecoreShipLastCompletedPublish
 
         write-host $serviceUrl
 
-        $time = Invoke-RestMethod "http://sitecoreshippoc/services/publish/lastcompleted" -Method GET
+        $time = Invoke-RestMethod "http://sitecoreshippoc/services/publish/lastcompleted" -Method GET -TimeoutSec $Timeout
 
         if (!$ResultAsUniversalTime)
         {
