@@ -2,7 +2,7 @@ Sitecore.Ship-PowerShell-Functions
 ==================================
 [Sitecore.Ship][3] is a great tool for setting up continuous delivery with Sitecore. With it, you can install packages over HTTP, but until now the easiest tool to use for scripting those HTTP requests was cURL. With this PowerShell module, you can eliminate that dependency from your suite of tools. 
 
-Package installation can be as simple as `ssinstall www.mysite.com mypackage.update`
+Remotely installing a package is as simple as `ssinstall www.mysite.com c:\mypackage.update -FileUpload`
 
 The functions in this module support all operations of Sitecore.Ship, and are self-documented so that `Get-Help` commands provide descriptions, syntax, and examples. Use these functions to build a repeatable deployment script for any environment!
 
