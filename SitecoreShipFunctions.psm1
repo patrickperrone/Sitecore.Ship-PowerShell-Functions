@@ -658,7 +658,7 @@ function Get-SitecoreShipLastCompletedPublish
         $time = Invoke-RestMethod $serviceUrl -Method GET -TimeoutSec $Timeout
         if (!$ResultAsUniversalTime)
         {
-            $time = $time.ToLocalTime()
+            $time = $time.date.ToLocalTime()
         }
         return $time
     }
