@@ -53,6 +53,16 @@ function Get-FormData([string[]]$dataArray, [string]$boundaryId)
     return $contents.ToString()
 }
 
+function Get-LocalTime([object]$time)
+{
+    if ($time -is [PSObject] -and ($time.psobject.Properties | where { $_.Name -eq "date"}))
+    {
+        return $time.date.ToLocalTime()
+    }
+
+    return $time.ToLocalTime()
+}
+
 #endregion
 
 #region Public Functions
@@ -546,7 +556,7 @@ function Invoke-SitecoreShipPublishRequest
         $time = $data | ConvertFrom-Json
         if (!$ResultAsUniversalTime)
         {
-            $time = $time.ToLocalTime()
+            $time = Get-LocalTime($time)
         }
 
         return $time
@@ -658,7 +668,7 @@ function Get-SitecoreShipLastCompletedPublish
         $time = Invoke-RestMethod $serviceUrl -Method GET -TimeoutSec $Timeout
         if (!$ResultAsUniversalTime)
         {
-            $time = $time.ToLocalTime()
+            $time = Get-LocalTime($time)
         }
         return $time
     }
