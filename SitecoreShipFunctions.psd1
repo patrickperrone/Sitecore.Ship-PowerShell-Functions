@@ -9,7 +9,7 @@
 @{
 
 # Version number of this module.
-ModuleVersion = '1.2.02'
+ModuleVersion = '1.2.03'
 
 # ID used to uniquely identify this module
 GUID = '1b83fbdb-f779-4cef-bbC5-b289a114eef4'
@@ -21,7 +21,7 @@ Author = 'Patrick Perrone'
 CompanyName = 'Unknown'
 
 # Copyright statement for this module
-Copyright = '(c) 2015 Patrick Perrone. All rights reserved.'
+Copyright = '(c) 2017 Patrick Perrone. All rights reserved.'
 
 # Description of the functionality provided by this module
 Description = 'Make web requests to Sitecore.Ship API'

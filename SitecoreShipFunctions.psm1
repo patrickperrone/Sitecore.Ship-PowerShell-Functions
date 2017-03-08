@@ -168,9 +168,19 @@ function Get-SitecoreShipVersion
         {
             $webResponse = Invoke-SitecoreShipAboutRequest $HostName -Timeout $Timeout
         }
+		
         $bodyText = ($webResponse.ParsedHtml.getElementsByTagName("body") | select innerText).innerText
         [string]$versionText = $bodyText.Split("`r`n") | Select-String "Current release"
-        $versionNumber = $versionText.Trim().Split(" ") | Select-Object -Last 1
+        if ($versionText)
+        {
+            $versionNumber = $versionText.Trim().Split(" ") | Select-Object -Last 1
+        }
+        else
+        {
+            $bodyText = $bodyText.Split("-").Trim() | Select-Object -Last 1
+            $versionNumber = $bodyText.Split(" ").Trim() | Select-Object -Last 1
+        }
+		
         return $versionNumber
     }
 }
